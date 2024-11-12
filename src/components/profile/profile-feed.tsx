@@ -1,13 +1,33 @@
+"use client"
 import { tweet } from "@/data/tweet";
 import {TweetItem} from "../tweet/tweet-item";
+import { useEffect, useState } from "react";
+import apiMyTweets from '@/data/api-user';
 
-export const ProfileFeed = () => {
+type Props ={
+    slug: any,
+}
+export const ProfileFeed = ({ slug }: Props) => {
+    const [tweets, setTweets ] = useState([]);
+
+    useEffect(()=>{
+      getMyTweets();
+    },[]);
+
+    const getMyTweets = async () => {
+        const token = localStorage.getItem('token');
+        if(token){
+            const res = await apiMyTweets.myTweets(token, slug);
+            setTweets(res.tweets);
+            console.log(res.tweets);
+        }
+    }
+
     return (
         <div>
-            <TweetItem tweet={tweet}/>
-            <TweetItem tweet={tweet}/>
-            <TweetItem tweet={tweet}/>
-            <TweetItem tweet={tweet}/>
+            {tweets.map((item, k) => (
+             <TweetItem key={k} tweet={item}/>
+            ))}
         </div>
     );
 }

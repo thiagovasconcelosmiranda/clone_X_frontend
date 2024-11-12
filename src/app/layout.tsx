@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import  {UserContextProvider}  from "@/contexts/AuthContext";
 
 export const metadata: Metadata = {
   title: "Z",
@@ -13,7 +14,9 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body>
-        {children}
+        <UserContextProvider>
+          {children}
+        </UserContextProvider>
       </body>
     </html>
   );

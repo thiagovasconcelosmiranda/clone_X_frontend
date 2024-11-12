@@ -2,7 +2,9 @@
 import { User } from "@/types/user"
 import Link from "next/link";
 import { Button } from "./button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import apiUser from "@/data/api-user";
+import { api } from "@/data/api";
 
 type Props = {
     user: User;
@@ -10,15 +12,24 @@ type Props = {
 
 export const RecommendationItem = ({ user }: Props) => {
     const [following, setFollowing] = useState(false);
-    const handleFollowButton = () => {
-        setFollowing(true);
+
+    useEffect(()=>{
+       //console.log(user);
+    },[])
+
+    const handleFollowButton = async () => {
+        const token = window.sessionStorage.getItem('token');
+        const res = await apiUser.userFollow(token, user.slug);
+        setFollowing(res.following);
     }
 
     return (
         <div className="flex items-center">
             <div className="size-10 mr-2 rounded-full overflow-hidden">
                 <Link href={`/${user.slug}`}>
-                    <img src={user.avatar}
+                    <img
+                        crossOrigin='anonymous'
+                        src={`${api}/avatars/${user.slug}/default.png`}
                         alt={user.name}
                         className="size-full"
                     />

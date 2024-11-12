@@ -35,9 +35,6 @@ export const HomeMenu = ({ closeAction }: Props) => {
             />
 
             <NavLogout/>
-               
-         
-
             </div>
         </div>
     )

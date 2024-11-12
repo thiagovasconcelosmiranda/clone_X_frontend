@@ -6,7 +6,7 @@ import { RecommendationArea } from "@/components/ui/recommendation-area";
 import { SearchInput } from "@/components/ui/search-input";
 import { TrendingArea } from "@/components/ui/trending-area";
 import { faHouse, faUser } from "@fortawesome/free-solid-svg-icons";
-import { ReactNode } from "react";
+import { ReactNode, } from "react";
 
 type Props = {
     children: ReactNode;
@@ -33,7 +33,7 @@ export default function Layout({ children }: Props) {
                 </div>
                 <div className="mb-6 flex flex-col gap-4">
                     <NavLogout />
-                    <NavMyProfile/>
+                    <NavMyProfile />
                 </div>
             </section>
             <section className="flex-1 max-w-lg">

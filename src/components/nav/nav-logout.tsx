@@ -1,13 +1,17 @@
 "use client"
-
 import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons/faArrowRightFromBracket";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
+import { useContext } from "react";
+import { AuthContext } from "@/contexts/AuthContext";
 
 export const NavLogout = () => {
     const router = useRouter();
+    const {setUserInfo} = useContext(AuthContext);
 
     const handleClick = () => {
+         setUserInfo({});
+         window.sessionStorage.clear();
         router.replace('/signin');
     }
 

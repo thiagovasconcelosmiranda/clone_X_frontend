@@ -1,11 +1,12 @@
 "use client"
-import { Tweet } from "@/types/tweet"
-import { formatRelativeTime } from "@/utils/format-relative"
-import { faComment, faHeart } from "@fortawesome/free-regular-svg-icons"
-import { faRetweet, faHeart as faHeartFilled } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import Link from "next/link"
-import { useState } from "react"
+import { Tweet } from "@/types/tweet";
+import { formatRelativeTime } from "@/utils/format-relative";
+import { faComment, faHeart } from "@fortawesome/free-regular-svg-icons";
+import { faRetweet, faHeart as faHeartFilled } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Link from "next/link";
+import { useState } from "react";
+import { api } from "@/data/api";
 
 type Props = {
     tweet: Tweet,
@@ -21,9 +22,10 @@ export const TweetItem = ({ tweet, hideComments }: Props) => {
     return (
         <div className="flex gap-2 p-6 border-b-2 border-gray-900">
             <div>
-                <Link href={`/${tweet.user.slug}`}>
+                <Link href={`/user/${tweet.user.slug}`}>
                     <img
-                        src={tweet.user.avatar}
+                        crossOrigin='anonymous'
+                        src={`${api}/avatars/${tweet.user.slug}/default.png`}
                         alt={tweet.user.name}
                         className="size-10 rounded-full"
                     />
@@ -36,16 +38,19 @@ export const TweetItem = ({ tweet, hideComments }: Props) => {
                             {tweet.user.name}
                         </Link>
                     </div>
-                    <div className="text-xs text-gray-500">@{tweet.user.slug} - {formatRelativeTime(tweet.dataPost)}</div>
+                    <div className="text-xs text-gray-500">@{tweet.user.slug} - {formatRelativeTime( new Date(2024, 8, 1, 10, 0, 0)
+                )}</div>
                 </div>
                 <div className="py-4 text-lg">{tweet.body}</div>
-                {tweet.image &&
-                    <div className="w-full">
-                        <img src={tweet.image}
-                            alt=""
-                            className="w-full rounded-2xl"
-                        />
-                    </div>
+                {!tweet.image != null &&
+                   <div className="w-full">
+                    
+                   <img
+                    crossOrigin='anonymous'
+                    src={`${api}/posts/${tweet.user.slug}/${tweet.id}/${tweet.image}`}
+                       className="w-full rounded-2xl"
+                   />
+               </div>
                 }
                 <div className="flex mt-6 text-gray-500">
                     {!hideComments &&
