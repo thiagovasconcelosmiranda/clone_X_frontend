@@ -27,7 +27,10 @@ export const SignupForm = () => {
             router.replace('/home');
         }
 
-        inputError(res);
+        if(res.error=== 'Acesso negado'){
+            alert(res.error);
+         }
+         inputError(res);
     }
 
     const inputError = (res: any) => {
@@ -42,16 +45,16 @@ export const SignupForm = () => {
                 value={nameField}
                 onChange={t => setNameField(t)}
             />
-            {nameField != '' && (
-                <ErrorInput text={nameField}/>
+            {errorName != '' && (
+                <ErrorInput text={errorName}/>
             )}
            
             <Input placeholder="Digite seu Email"
                 value={emailField}
                 onChange={t => setEmailField(t)}
             />
-              {emailField != '' && (
-                <ErrorInput text={emailField}/>
+              {errorEmail != '' && (
+                <ErrorInput text={errorEmail}/>
             )}
 
             <Input placeholder="Digite sua nova senha"
@@ -59,8 +62,8 @@ export const SignupForm = () => {
                 onChange={t => setPasswordField(t)}
                 password
             />
-              {passwordField != '' && (
-                <ErrorInput text={passwordField}/>
+              {errorPassword != '' && (
+                <ErrorInput text={errorPassword}/>
             )}
 
             <Button label='Crie sua conta'

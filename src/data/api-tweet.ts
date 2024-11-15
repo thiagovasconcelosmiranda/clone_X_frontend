@@ -12,14 +12,17 @@ export default {
         return json;
     },
 
-    bodyTweet: async (token: string, body: string) => {
+    bodyTweet: async (token: string, body: string, image: any) => {
+        const data = new FormData();
+        data.append('body', body);
+        data.append('image', image);
+        
         const req = await fetch(`${api}/tweet`, {
            method: 'POST',
            headers:{
-             'Content-type':'application/json',
              'Authorization':`Bearer ${token}`
            },
-           body: JSON.stringify({body})
+           body: data
         });
 
         const json = await req.json();

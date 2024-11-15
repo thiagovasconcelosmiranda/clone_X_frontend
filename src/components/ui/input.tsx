@@ -53,3 +53,19 @@ export const Input = ({ placeholder, password, filled, icon, value, onChange, on
         </div>
     )
 }
+
+type File = {
+  onChange?: (newValue: any) => void
+  id: string
+}
+
+export const InputUpload = ({onChange, id}: File) => {
+   return (
+    <input 
+    type="file" 
+    id={id} 
+    onChange={e => onChange && onChange(e.target.files[0])} 
+    className="hidden"
+    />
+   )
+}

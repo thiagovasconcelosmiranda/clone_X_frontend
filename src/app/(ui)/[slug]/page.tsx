@@ -11,7 +11,6 @@ import { User } from '@/types/user';
 import { AuthContext } from "@/contexts/AuthContext";
 import { useParams } from "next/navigation";
 import apiUser from "@/data/api-user";
-import { api } from "@/data/api";
 
 type UserI = {
     followersCount?: number,
@@ -68,7 +67,7 @@ export default function Page() {
                     <div className="bg-gray-500 h-28 bg-no-repeat bg-cover bg-center overflow-hidden">
                        <img
                          crossOrigin="anonymous"
-                         src={`${api}/covers/${userI?.user.slug}/default.jpg`}
+                         src={userI?.user.cover}
                          alt={userI?.user.name} 
                          className="bg-cover top-4"
                          />
@@ -76,7 +75,7 @@ export default function Page() {
                     <div className="-mt-12 flex justify-between items-end px-6">
                         <img
                             crossOrigin="anonymous"
-                            src={`${api}/avatars/${userI?.user.slug}/default.png`}
+                            src={userI?.user.avatar}
                             alt={userI?.user.name}
                             className="size-24 rounded-full"
                         />

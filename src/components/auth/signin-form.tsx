@@ -5,7 +5,6 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import authSign from "@/data/api-signin";
 import { ErrorInput } from "../ui/error-input";
-import { json } from "stream/consumers";
 
 export const SigninForm = () => {
     const router = useRouter();
@@ -22,8 +21,10 @@ export const SigninForm = () => {
             sessionStorage.setItem('slug', res.user.slug);
             router.replace('/home');
          }
-
-        inputError(res);
+         if(res.error=== 'Acesso negado'){
+            alert(res.error);
+         }
+         inputError(res);
     }
 
     const inputError = (res: any) => {

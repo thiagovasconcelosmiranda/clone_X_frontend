@@ -41,7 +41,7 @@ export const NavMyProfile = () => {
                     <Link href={`/${userX?.slug}`}>
                         <img
                             crossOrigin='anonymous'
-                            src={`${api}/avatars/${userX?.slug}/default.png`}
+                            src={userX?.avatar }
                             alt={userX?.name}
                             className='size-full'
                         />

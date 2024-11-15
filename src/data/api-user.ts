@@ -45,5 +45,36 @@ export default {
       });
       const json = await req.json();
       return json;
+    },
+    updateAvatar: async (token: string, slug: string, avatar: any) => {
+      const data = new FormData();
+      data.append('slug', slug);
+      data.append('avatar', avatar);
+
+      const req = await fetch(`${api}/user/avatar`,{
+        method:'PUT',
+        headers: {
+           'Authorization':`Bearer ${token}`
+        },
+        body: data
+      });
+      const json = await req.json();
+      return json;
+    },
+
+    updateCover: async (token: string, slug: string, cover: any) => {
+      const data = new FormData();
+      data.append('slug', slug);
+      data.append('cover', cover);
+
+      const req = await fetch(`${api}/user/cover`, {
+        method:'PUT',
+        headers: {
+           'Authorization':`Bearer ${token}`
+        },
+        body: data
+      });
+      const json = await req.json();
+      return json;
     }
 }

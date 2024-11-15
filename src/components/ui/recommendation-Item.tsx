@@ -4,18 +4,19 @@ import Link from "next/link";
 import { Button } from "./button";
 import { useEffect, useState } from "react";
 import apiUser from "@/data/api-user";
-import { api } from "@/data/api";
 
 type Props = {
     user: User;
 }
 
+
 export const RecommendationItem = ({ user }: Props) => {
     const [following, setFollowing] = useState(false);
 
-    useEffect(()=>{
-       //console.log(user);
-    },[])
+    
+useEffect(()=>{
+    console.log(user.avatar);
+   }, []);
 
     const handleFollowButton = async () => {
         const token = window.sessionStorage.getItem('token');
@@ -29,7 +30,7 @@ export const RecommendationItem = ({ user }: Props) => {
                 <Link href={`/${user.slug}`}>
                     <img
                         crossOrigin='anonymous'
-                        src={`${api}/avatars/${user.slug}/default.png`}
+                        src= {user.avatar}
                         alt={user.name}
                         className="size-full"
                     />
