@@ -5,7 +5,7 @@ import { faComment, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faRetweet, faHeart as faHeartFilled } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "@/data/api";
 
 type Props = {
@@ -38,7 +38,7 @@ export const TweetItem = ({ tweet, hideComments }: Props) => {
                             {tweet.user.name}
                         </Link>
                     </div>
-                    <div className="text-xs text-gray-500">@{tweet.user.slug} - {formatRelativeTime(new Date(2024, 8, 1, 10, 0, 0)
+                    <div className="text-xs text-gray-500">@{tweet.user.slug} - {formatRelativeTime(new Date(tweet.createAt)
                     )}</div>
                 </div>
                 <div className="py-4 text-lg">{tweet.body}</div>
@@ -82,6 +82,19 @@ export const TweetItem = ({ tweet, hideComments }: Props) => {
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    )
+}
+
+export const TweetItemSkeleton = () => {
+    return (
+        <div className="animate-pulse flex items-center">
+              <div className="size-10 mr-2 rounded-full bg-gray-600"></div>
+              <div className="flex-1 flex flex-col gap-1 ">
+                <div className="bg-gray-600 w-3/4 h-4" ></div>
+                <div className="bg-gray-600 w-1/4 h-4" ></div>
+                <div className="bg-gray-600 w-1/4 h-4" ></div>
             </div>
         </div>
     )

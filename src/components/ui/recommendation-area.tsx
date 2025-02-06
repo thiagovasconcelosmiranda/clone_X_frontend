@@ -15,10 +15,12 @@ export const RecommendationArea = () => {
         const token = window.sessionStorage.getItem('token');
         if (token) {
             const res = await apiRecommendation.suggestions(token);
-            setSuggestions(res.users);
-            setTimeout(() => {
-                setSkeleton(false);
-            });
+            if (res.users.length > 0) {
+                setSuggestions(res.users);
+                setTimeout(() => {
+                    setSkeleton(false);
+                });
+            }
         }
     }
 
@@ -26,16 +28,20 @@ export const RecommendationArea = () => {
         <div className="bg-gray-700 rounded-3xl">
             <h2 className="text-xl p-6">Quem seguir</h2>
             <div className="flex flex-col gap-4 p-6 pt-0">
-                {suggestions.map((item, k) => (
-                    <div key={k}>
-                        {skeleton ? (
-                            <RecommendationItemSkeleton/>
-                        ) : (
-                            <RecommendationItem user={item} />
-                        )}
+                {suggestions && (
+                    <>
+                        {suggestions.map((item, k) => (
+                            <div key={k}>
+                                {skeleton ? (
+                                    <RecommendationItemSkeleton />
+                                ) : (
+                                    <RecommendationItem user={item} />
+                                )}
 
-                    </ div>
-                ))}
+                            </ div>
+                        ))}
+                    </>
+                )}
             </div>
         </div>
     )

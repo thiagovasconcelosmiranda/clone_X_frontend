@@ -1,5 +1,4 @@
 "use client"
-import { tweet } from "@/data/tweet";
 import {TweetItem} from "../tweet/tweet-item";
 import { useEffect, useState } from "react";
 import apiMyTweets from '@/data/api-user';

@@ -2,31 +2,46 @@
 import { faImage } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button } from '../ui/button';
-import { FormEvent, useContext, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import apiTweet from '@/data/api-tweet';
-import { AuthContext } from '@/contexts/AuthContext';
 import { InputUpload } from '../ui/input';
-import { TweetItem } from './tweet-item';
-import { Tweet } from '@/types/tweet';
-
+import verifyUrl from '@/utils/verify-url';
+import apiUser from '@/data/api-user';
+import { User } from '@/types/user'
 
 export const TweetPost = () => {
   const [bodyValue, setBodyValue] = useState('');
-  const { userInfo } = useContext(AuthContext);
   const [file, setFile] = useState(null);
   const [nameFile, setNameFile] = useState('');
+  const [user, setUser] = useState<User>();
+  const [avatar, setAvatar] = useState('');
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
+  const getUser = async () => {
+    const token = await sessionStorage.getItem('token');
+    const slug = await sessionStorage.getItem('slug');
+
+    if (token && slug) {
+      const res = await apiUser.getUserSlug(token, slug);
+      setAvatar(verifyUrl.avatar(res.user.avatar));
+      setUser(res.user);
+    }
+  }
 
   const handlePostClick = async () => {
     const token = window.sessionStorage.getItem('token');
     if (token) {
-    
+
       if (bodyValue) {
         const res = await apiTweet.bodyTweet(
           token,
           bodyValue,
           file
         );
-       console.log(res);
+        console.log(res);
       }
     }
   }
@@ -43,11 +58,12 @@ export const TweetPost = () => {
     <>
       <div className="flex gap-6 py-8 border-b-2 border-gray-900">
         <div className="">
-          {userInfo.slug && (
+
+          {user?.slug && (
             <img
               crossOrigin='anonymous'
-              src={userInfo.avatar}
-              alt={userInfo.name}
+              src={avatar}
+              alt={user?.name}
               className='size-12 rounded-full'
             />
           )}

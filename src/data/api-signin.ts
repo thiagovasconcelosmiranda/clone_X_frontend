@@ -11,13 +11,14 @@ export default {
     },
  
     signin: async (email: string, password: string) => {
+      let data = new FormData();
+
+      data.append('email', email);
+      data.append('password', password);
+
         const req = await fetch(`${api}/auth/signin`, {
            method: 'POST',
-           headers:{
-             Accept: 'application/json',
-            'Content-Type': 'application/json'
-           },
-           body: JSON.stringify({email, password})
+           body: data
         });
  
         const json = await req.json();

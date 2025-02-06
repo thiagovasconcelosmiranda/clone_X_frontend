@@ -21,16 +21,15 @@ export const SignupForm = () => {
 
     const handleEnterButton = async () => {
         const res = await authSign.signup(nameField, emailField, passwordField);
+
         if (res.token) {
-            sessionStorage.setItem('token', res.token);
-            sessionStorage.setItem('slug', res.user.slug);
-            router.replace('/home');
+            router.replace('/signin');
         }
 
-        if(res.error=== 'Acesso negado'){
+        if (res.error === 'Acesso negado') {
             alert(res.error);
-         }
-         inputError(res);
+        }
+        inputError(res);
     }
 
     const inputError = (res: any) => {
@@ -46,15 +45,15 @@ export const SignupForm = () => {
                 onChange={t => setNameField(t)}
             />
             {errorName != '' && (
-                <ErrorInput text={errorName}/>
+                <ErrorInput text={errorName} />
             )}
-           
+
             <Input placeholder="Digite seu Email"
                 value={emailField}
                 onChange={t => setEmailField(t)}
             />
-              {errorEmail != '' && (
-                <ErrorInput text={errorEmail}/>
+            {errorEmail != '' && (
+                <ErrorInput text={errorEmail} />
             )}
 
             <Input placeholder="Digite sua nova senha"
@@ -62,8 +61,8 @@ export const SignupForm = () => {
                 onChange={t => setPasswordField(t)}
                 password
             />
-              {errorPassword != '' && (
-                <ErrorInput text={errorPassword}/>
+            {errorPassword != '' && (
+                <ErrorInput text={errorPassword} />
             )}
 
             <Button label='Crie sua conta'

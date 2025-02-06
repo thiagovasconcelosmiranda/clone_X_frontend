@@ -8,20 +8,49 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useContext, useEffect, useRef } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
 import apiUpdate from '@/data/api-user';
-import { api } from "@/data/api";
 import apiavatar from '@/data/api-user';
 import apicover from '@/data/api-user';
+import apiUser from "@/data/api-user";
+import { User } from "@/types/user";
+import verifyUrl from "@/utils/verify-url";
 
 
 export default function Page() {
     const { userInfo } = useContext(AuthContext);
-    const [nameField, setNameField] = useState(userInfo.name);
-    const [linkField, setLinkField] = useState(userInfo.link);
-    const [bioField, setBioField] = useState(userInfo.bio);
-    const token = window.sessionStorage.getItem('token');
+    const [nameField, setNameField] = useState('');
+    const [linkField, setLinkField] = useState('');
+    const [bioField, setBioField] = useState('');
+    const [user, setUser] = useState<User>();
+    const [token, setToken] = useState('');
+
+    useEffect(() => {
+        getUser();
+    }, []);
+
+    const getUser = async () => {
+        const token: any = sessionStorage.getItem('token');
+        const slug = sessionStorage.getItem('slug');
+
+        if (!token && !slug) return;
+        setToken(token);
+
+        const res = await apiUser.getUserSlug(token, slug);
+
+        if (res.user.slug) {
+            res.user.avatar = verifyUrl.avatar(res.user.avatar);
+            setUser(res.user);
+            setNameField(errorValueInput(res.user.name));
+            setBioField(errorValueInput(res.user.bio));
+            setLinkField(errorValueInput(res.user.link))
+        }
+
+    }
+
+    function errorValueInput(user: any) {
+        return user !== null ? user : '';
+    }
 
     const handleClickEdit = async () => {
-        
         if (nameField && linkField && bioField) {
             const token = window.sessionStorage.getItem('token');
 
@@ -31,7 +60,7 @@ export default function Page() {
                 linkField,
                 bioField
             );
-
+            console.log(res)
 
             if (res.user) alert(res.user);
             if (res.error) alert(res.error);
@@ -45,7 +74,6 @@ export default function Page() {
                 userInfo.slug,
                 file
             );
-            console.log(res);
         }
     }
 
@@ -56,7 +84,7 @@ export default function Page() {
                 userInfo.slug,
                 file
             );
-            console.log(res);
+            //console.log(res);
         }
     }
 
@@ -68,9 +96,8 @@ export default function Page() {
 
             <section className="border-b-2 border-gray-900">
                 <div className="flex justify-center items-center gap-4 bg-gray-500 h-28 overflow-hidden">
-                    
                     <div className=" bg-black/80 flex justify-center items-center size-12 rounded-full">
-                        <label htmlFor="file">
+                        <label htmlFor="file" className="">
                             <FontAwesomeIcon icon={faCamera} className="size-4 cursor-pointer" />
                         </label>
                         <InputUpload
@@ -82,16 +109,16 @@ export default function Page() {
                         <FontAwesomeIcon icon={faXmark} className="size-4" />
                     </div>
                 </div>
-                <div className="-mt-12 px-6">
-                    {userInfo.slug && (
+                <div className="-mt-12 px-6 -z-50">
+                    {user?.slug && (
                         <img
-                        crossOrigin="anonymous"
-                        src={userInfo.avatar}
-                        alt={userInfo.name}
-                        className="size-24 rounded-full"
-                    />
+                            crossOrigin="anonymous"
+                            src={user?.avatar}
+                            alt={user?.name}
+                            className="size-24 rounded-full"
+                        />
                     )}
-                   
+
                     <div className="-mt-24 size-24 flex justify-center items-center">
                         <div className=" bg-black/80 flex justify-center items-center size-12 rounded-full">
                             <label htmlFor="fileAvatar">
@@ -109,7 +136,7 @@ export default function Page() {
                 <label>
                     <p className="text-lg text-gray-500 mb-2">Nome</p>
                     <Input
-                        placeholder={userInfo.name}
+                        placeholder={nameField}
                         value={nameField}
                         onChange={(e) => setNameField(e)}
                     />
@@ -117,7 +144,7 @@ export default function Page() {
                 <label>
                     <p className="text-lg text-gray-500 mb-2">Bio</p>
                     <TextArea
-                        placeholder={userInfo.bio}
+                        placeholder={bioField}
                         rows={4}
                         value={bioField}
                         onChange={(e) => setBioField(e)}
@@ -126,7 +153,7 @@ export default function Page() {
                 <label>
                     <p className="text-lg text-gray-500 mb-2">Link</p>
                     <Input
-                        placeholder={userInfo.link}
+                        placeholder={linkField}
                         value={linkField}
                         onChange={(e) => setLinkField(e)}
                     />

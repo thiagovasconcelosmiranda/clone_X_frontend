@@ -14,17 +14,19 @@ export const SigninForm = () => {
     const [errorPassword, setErrorPassword] = useState('');
 
     const handleEnterButton = async () => {
-        
+
         const res = await authSign.signin(emailField, passwordField);
-         if (res.token) {
+
+        if (res.token) {
             sessionStorage.setItem('token', res.token);
             sessionStorage.setItem('slug', res.user.slug);
             router.replace('/home');
-         }
-         if(res.error=== 'Acesso negado'){
+        }
+
+        if (res.error === 'Acesso negado') {
             alert(res.error);
-         }
-         inputError(res);
+        }
+        inputError(res);
     }
 
     const inputError = (res: any) => {
@@ -34,12 +36,13 @@ export const SigninForm = () => {
 
     return (
         <>
-            <Input placeholder="Digite seu email"
+            <Input
+             placeholder="Digite seu email"
                 value={emailField}
                 onChange={t => setEmailField(t)}
             />
             {errorEmail != '' && (
-                <ErrorInput text={errorEmail}/>
+                <ErrorInput text={errorEmail} />
             )}
 
             <Input placeholder="Digite sua senha"
@@ -48,9 +51,9 @@ export const SigninForm = () => {
                 password
             />
             {errorPassword != '' && (
-               <ErrorInput
-               text= {errorPassword}
-               />
+                <ErrorInput
+                    text={errorPassword}
+                />
             )}
 
             <Button label='Entrar'

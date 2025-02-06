@@ -4,6 +4,8 @@ import Link from "next/link";
 import { Button } from "./button";
 import { useEffect, useState } from "react";
 import apiUser from "@/data/api-user";
+import verifyUrl from "@/utils/verify-url";
+import { useRouter } from "next/navigation";
 
 type Props = {
     user: User;
@@ -11,17 +13,30 @@ type Props = {
 
 
 export const RecommendationItem = ({ user }: Props) => {
-    const [following, setFollowing] = useState(false);
+    const [following, setFollowing] = useState(true);
+    const [isMe, setIsMe] = useState(false);
+    const [avatar, setAvatar] = useState('');
+    const router = useRouter();
 
-    
-useEffect(()=>{
-    console.log(user.avatar);
-   }, []);
+
+    useEffect(() => {
+        setAvatar(verifyUrl.avatar(user.avatar));
+        verifyUser();
+    }, []);
+
+    const verifyUser = () => {
+        const slug = sessionStorage.getItem('slug');
+        user.slug == slug ? setIsMe(true) : setIsMe(false);
+    }
 
     const handleFollowButton = async () => {
         const token = window.sessionStorage.getItem('token');
         const res = await apiUser.userFollow(token, user.slug);
         setFollowing(res.following);
+
+    }
+    const handleFollowLink = () => {
+        router.replace(`/${user.slug}/edit`);
     }
 
     return (
@@ -30,7 +45,7 @@ useEffect(()=>{
                 <Link href={`/${user.slug}`}>
                     <img
                         crossOrigin='anonymous'
-                        src= {user.avatar}
+                        src={avatar}
                         alt={user.name}
                         className="size-full"
                     />
@@ -45,20 +60,32 @@ useEffect(()=>{
                 </Link>
             </div>
             <div className="pl-2 w-20">
-                {!following &&
+                {!isMe ? (
+                    <>
+                        {following && (
+                            <Button
+                                label="Seguir"
+                                onClick={handleFollowButton}
+                                size={3}
+                            />
+                        )}
+                    </>
+
+                ) : (
                     <Button
-                        label="Seguir"
-                        onClick={handleFollowButton}
+                        label="Alterar"
+                        onClick={handleFollowLink}
                         size={3}
                     />
-                }
+                )}
             </div>
         </div>
     );
 }
 
-export const RecommendationItemSkeleton = () =>{
-    return(
+
+export const RecommendationItemSkeleton = () => {
+    return (
         <div className="animate-pulse flex items-center">
             <div className="size-10 mr-2 rounded-full bg-gray-600"></div>
             <div className="flex-1 flex flex-col gap-1 ">

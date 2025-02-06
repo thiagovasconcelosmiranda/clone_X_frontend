@@ -1,8 +1,8 @@
 import { api } from "./api";
 
 export default {
-    getUserSlug: async (token: string |null, slug: string) =>{
-        const req = await fetch(`${api}/user${slug}`, {
+    getUserSlug: async (token: string |null, slug: string | null) =>{
+        const req = await fetch(`${api}/user/${slug}`, {
          method:'get',
          headers:{
            'Authorization':`Bearer ${token}`

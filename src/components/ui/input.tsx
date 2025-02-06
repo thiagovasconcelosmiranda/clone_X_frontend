@@ -64,8 +64,8 @@ export const InputUpload = ({onChange, id}: File) => {
     <input 
     type="file" 
     id={id} 
-    onChange={e => onChange && onChange(e.target.files[0])} 
-    className="hidden"
+    onChange={e => onChange && onChange(e.target.files)} 
+    className="hidden overflow-hidden"
     />
    )
 }
