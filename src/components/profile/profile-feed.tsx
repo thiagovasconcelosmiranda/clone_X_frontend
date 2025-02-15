@@ -18,7 +18,6 @@ export const ProfileFeed = ({ slug }: Props) => {
         if(token){
             const res = await apiMyTweets.myTweets(token, slug);
             setTweets(res.tweets);
-            console.log(res.tweets);
         }
     }
 

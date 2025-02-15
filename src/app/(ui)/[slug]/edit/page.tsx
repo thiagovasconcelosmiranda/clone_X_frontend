@@ -14,7 +14,6 @@ import apiUser from "@/data/api-user";
 import { User } from "@/types/user";
 import verifyUrl from "@/utils/verify-url";
 
-
 export default function Page() {
     const { userInfo } = useContext(AuthContext);
     const [nameField, setNameField] = useState('');
@@ -41,7 +40,7 @@ export default function Page() {
             setUser(res.user);
             setNameField(errorValueInput(res.user.name));
             setBioField(errorValueInput(res.user.bio));
-            setLinkField(errorValueInput(res.user.link))
+            setLinkField(errorValueInput(res.user.link));
         }
 
     }
@@ -51,20 +50,19 @@ export default function Page() {
     }
 
     const handleClickEdit = async () => {
-        if (nameField && linkField && bioField) {
-            const token = window.sessionStorage.getItem('token');
-
-            const res = await apiUpdate.userUpdate(
-                token,
-                nameField,
-                linkField,
-                bioField
-            );
-            console.log(res)
-
-            if (res.user) alert(res.user);
-            if (res.error) alert(res.error);
-        }
+            const token = sessionStorage.getItem('token');
+            if(token){
+                const res = await apiUpdate.userUpdate(
+                    token,
+                    nameField,
+                    linkField,
+                    bioField
+                );
+               
+                if (res.user) alert(res.user);
+                if (res.error) alert(res.error);
+            }
+           
     }
 
     const handleUploadCover = async (file: any) => {
@@ -90,7 +88,7 @@ export default function Page() {
 
     return (
         <div>
-            <GeneralHeader backHref="/">
+            <GeneralHeader backHref="/edit">
                 <div className=" font-bold text-lg">Editar perfil</div>
             </GeneralHeader>
 

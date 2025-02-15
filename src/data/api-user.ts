@@ -35,14 +35,19 @@ export default {
     },
 
     userUpdate: async (token: string | null,  name: string, link: string, bio: string) => {
+      let data = new FormData();
+      data.append('name', name);
+      data.append('bio', bio);
+      data.append('link', link);
+
       const req = await fetch(`${api}/user`, {
         method: 'PUT',
         headers:{
-          'Content-type':'application/json',
           'Authorization':`Bearer ${token}`
         },
-        body: JSON.stringify({name, link, bio})
+        body: data
       });
+      
       const json = await req.json();
       return json;
     },

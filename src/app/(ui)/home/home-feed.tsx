@@ -3,6 +3,8 @@ import { TweetItem, TweetItemSkeleton } from "@/components/tweet/tweet-item"
 import { useEffect, useState } from 'react';
 import apiFeed from "@/data/api-feed";
 import verifyUrl from "@/utils/verify-url";
+import { AnswerPost } from "@/components/answer/answer-post";
+import Link from "next/link";
 
 export const HomeFeed = () => {
     const [listFeed, setListFeed] = useState([]);
@@ -11,6 +13,7 @@ export const HomeFeed = () => {
 
     useEffect(() => {
         getFeed();
+
     }, []);
 
     const getFeed = async () => {
@@ -20,12 +23,13 @@ export const HomeFeed = () => {
             if (res.tweets) {
                 setListFeed(res.tweets);
                 setIsLoading(true);
+                console.log(res.tweets)
 
                 for (let tweetIndex in res.tweets) {
                     res.tweets[tweetIndex].user.avatar = verifyUrl.avatar(res.tweets[tweetIndex].user.avatar);
                 }
-                setTimeout(()=>{
-                  setSkeleton(false);
+                setTimeout(() => {
+                    setSkeleton(false);
                 }, 2000);
             }
         }
@@ -43,10 +47,7 @@ export const HomeFeed = () => {
                                 <TweetItem key={k} tweet={item} />
                             )}
                     </div>
-
                 ))}
-
-
             </div>
         )
     }

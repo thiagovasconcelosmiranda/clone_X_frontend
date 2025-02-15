@@ -47,8 +47,22 @@ export default {
     });
     const json = await req.json();
     return json;
+  },
+
+  addAnswer: async (token: string, body: string, id: number) => {
+    let data = new FormData();
+    data.append('body', body);
+    
+    const req = await fetch(`${api}/tweet/${id}/answer`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      body: data
+    });
+
+    const json = await req.json();
+    return json;
   }
-
-
 
 }

@@ -10,6 +10,5 @@ export default {
         });
         const json = await req.json();
         return json;
-       
     }
 }

@@ -13,29 +13,36 @@ export const NavMyProfile = () => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [avatar, setAvatar] = useState("");
+    let count = 0;
 
     useEffect(() => {
-        getUser();
+        count++;
+        if(count == 1){
+            getUser();
+        }
     }, []);
 
+
+   
     const getUser = async () => {
         const token = sessionStorage.getItem('token');
         const slug = sessionStorage.getItem('slug');
-        
+       
         if (slug && token) {
             const res = await apiUser.getUserSlug(token, slug);
          
-            if (res) {
+            if (res.user.slug) {
                 setIsLoading(true);
                 setAvatar(verifyUrl.avatar(res.user.avatar));
                 setUserX(res.user);
-                setUserInfo(res.user);
                 getTweet(token, slug);
+
+                setUserInfo(res);
             }
 
         } else {
             router.replace('/signin');
-        }
+        } 
     }
     const getTweet = async (token: string, slug: string) => {
        

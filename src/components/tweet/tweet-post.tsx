@@ -7,7 +7,8 @@ import apiTweet from '@/data/api-tweet';
 import { InputUpload } from '../ui/input';
 import verifyUrl from '@/utils/verify-url';
 import apiUser from '@/data/api-user';
-import { User } from '@/types/user'
+import { User } from '@/types/user';
+import { AlertForm } from '../ui/alert-form';
 
 export const TweetPost = () => {
   const [bodyValue, setBodyValue] = useState('');
@@ -15,6 +16,7 @@ export const TweetPost = () => {
   const [nameFile, setNameFile] = useState('');
   const [user, setUser] = useState<User>();
   const [avatar, setAvatar] = useState('');
+  const [visibleAlert, setVisibleAlert] = useState(false)
 
   useEffect(() => {
     getUser();
@@ -33,15 +35,21 @@ export const TweetPost = () => {
 
   const handlePostClick = async () => {
     const token = window.sessionStorage.getItem('token');
-    if (token) {
 
+    if (token) {
       if (bodyValue) {
         const res = await apiTweet.bodyTweet(
           token,
           bodyValue,
           file
         );
-        console.log(res);
+
+        if (res.id > 0) {
+          setVisibleAlert(true);
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        }
       }
     }
   }
@@ -100,6 +108,9 @@ export const TweetPost = () => {
             </div>
           </div>
         </div>
+        {visibleAlert && (
+          <AlertForm msg='Post enviado!'/>
+        )}
       </div>
     </>
   )

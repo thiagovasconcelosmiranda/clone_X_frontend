@@ -1,10 +1,12 @@
 "use client"
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import authSign from "@/data/api-signin";
 import { ErrorInput } from "../ui/error-input";
+import { AlertForm } from "../ui/alert-form";
+import { AuthContext } from "@/contexts/AuthContext";
 
 export const SigninForm = () => {
     const router = useRouter();
@@ -12,6 +14,9 @@ export const SigninForm = () => {
     const [passwordField, setPasswordField] = useState('');
     const [errorEmail, setErrorEmail] = useState('');
     const [errorPassword, setErrorPassword] = useState('');
+    const [visibleAlert, setVisibleAlert] = useState(false);
+    const [textAlert, setTextAlert] = useState('');
+    const {setUserInfo} = useContext(AuthContext);
 
     const handleEnterButton = async () => {
 
@@ -20,12 +25,20 @@ export const SigninForm = () => {
         if (res.token) {
             sessionStorage.setItem('token', res.token);
             sessionStorage.setItem('slug', res.user.slug);
+            sessionStorage.setItem('avatar', res.user.avatar);
+            setUserInfo(res);
             router.replace('/home');
+            return;
         }
 
         if (res.error === 'Acesso negado') {
-            alert(res.error);
+            setVisibleAlert(true);
+            setTextAlert(res.error);
         }
+        
+        setTimeout(() => {
+            setVisibleAlert(false);
+        }, 2000)
         inputError(res);
     }
 
@@ -37,7 +50,7 @@ export const SigninForm = () => {
     return (
         <>
             <Input
-             placeholder="Digite seu email"
+                placeholder="Digite seu email"
                 value={emailField}
                 onChange={t => setEmailField(t)}
             />
@@ -60,7 +73,9 @@ export const SigninForm = () => {
                 onClick={handleEnterButton}
                 size={1}
             />
-
+            {visibleAlert && (
+                <AlertForm msg={textAlert} />
+            )}
         </>
     )
 }

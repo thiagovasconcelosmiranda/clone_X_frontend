@@ -2,7 +2,7 @@
 import { User } from "@/types/user"
 import Link from "next/link";
 import { Button } from "./button";
-import { useEffect, useState } from "react";
+import { use, useContext, useEffect, useState } from "react";
 import apiUser from "@/data/api-user";
 import verifyUrl from "@/utils/verify-url";
 import { useRouter } from "next/navigation";
@@ -14,27 +14,35 @@ type Props = {
 
 export const RecommendationItem = ({ user }: Props) => {
     const [following, setFollowing] = useState(true);
-    const [isMe, setIsMe] = useState(false);
+    const token = window.sessionStorage.getItem('token');
     const [avatar, setAvatar] = useState('');
     const router = useRouter();
-
+    let count = 0;
 
     useEffect(() => {
-        setAvatar(verifyUrl.avatar(user.avatar));
-        verifyUser();
+        count++;
+        if (count === 1){
+            follows();
+            setAvatar(verifyUrl.avatar(user.avatar));
+        } 
     }, []);
 
-    const verifyUser = () => {
-        const slug = sessionStorage.getItem('slug');
-        user.slug == slug ? setIsMe(true) : setIsMe(false);
-    }
-
     const handleFollowButton = async () => {
-        const token = window.sessionStorage.getItem('token');
         const res = await apiUser.userFollow(token, user.slug);
         setFollowing(res.following);
-
     }
+
+    const follows = async () => {
+        const slug = sessionStorage.getItem('slug');
+        const res = await apiUser.getUserSlug(token, slug);
+        
+        if (res.follows.length > 0) {
+            for(let slugIndex in res.follows){
+                res.follows[slugIndex] === user.slug ? setFollowing(false) : setFollowing(true);
+            }
+        }
+    }
+
     const handleFollowLink = () => {
         router.replace(`/${user.slug}/edit`);
     }
@@ -53,28 +61,17 @@ export const RecommendationItem = ({ user }: Props) => {
             </div>
             <div className="flex-1 overflow-hidden">
                 <Link href={user.slug}
-                    className="block truncate"
-                >
+                    className="block truncate">
                     <div className="truncate text-sm">{user.name}</div>
                     <div className="truncate text-sm text-gray-400">@{user.slug}</div>
                 </Link>
             </div>
             <div className="pl-2 w-20">
-                {!isMe ? (
-                    <>
-                        {following && (
-                            <Button
-                                label="Seguir"
-                                onClick={handleFollowButton}
-                                size={3}
-                            />
-                        )}
-                    </>
 
-                ) : (
+                {following && (
                     <Button
-                        label="Alterar"
-                        onClick={handleFollowLink}
+                        label="Seguir"
+                        onClick={handleFollowButton}
                         size={3}
                     />
                 )}

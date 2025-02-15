@@ -1,1 +1,1 @@
-export const api = 'https://clone-x-api.vercel.app';
+export const api = 'http://localhost:5000';

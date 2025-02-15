@@ -13,7 +13,6 @@ import { useParams } from "next/navigation";
 import apiUser from "@/data/api-user";
 import verifyUrl from "@/utils/verify-url";
 import apiTweet from "@/data/api-tweet";
-import { Tweet } from "@/types/tweet";
 import { TweetItem } from "@/components/tweet/tweet-item";
 
 type UserI = {
@@ -45,9 +44,6 @@ export default function Page() {
         let slug = sessionStorage.getItem('slug');
         host === slug ? setIsMe(true) : setIsMe(false);
     }
-    async function follow() {
-
-    }
 
     async function getUser() {
         if (token) {
@@ -58,7 +54,6 @@ export default function Page() {
                 setCover(verifyUrl.cover(res.user.cover));
                 setIsLoading(true);
                 isMeData();
-                follow();
                 myTweet(res.user.slug);
                 userFollow(res.user.slug);
             }
@@ -69,17 +64,22 @@ export default function Page() {
         }
     }
 
-    const userFollow = (slug: string) => {
-        //console.log(slug);
+    const userFollow = async (slug2: string) => {
+        const slug = sessionStorage.getItem('slug');
+        const res = await apiUser.getUserSlug(token, slug);
+
+        for (let followIndex in res.follows) {
+            if (res.follows[followIndex] == slug2) setFollowing(true);
+        }
     }
 
     const myTweet = async (slug: string) => {
         const res = await apiTweet.tweetslug(token, slug);
-       
+
         if (res.tweets.length > 0) {
             for (let tweetIndex in res.tweets) {
                 res.tweets[tweetIndex].user.avatar = verifyUrl.avatar(res.tweets[tweetIndex].user.avatar)
-             }
+            }
             setTweet(res.tweets);
         }
     }
@@ -93,7 +93,7 @@ export default function Page() {
     if (isLoading) {
         return (
             <div>
-                <GeneralHeader backHref="/">
+                <GeneralHeader backHref="/home">
                     <div className=" font-bold text-lg">{userI?.user.slug}</div>
                     <div className="text-xs text-gray-500">
                         {userI?.tweetCount} posts
@@ -139,8 +139,8 @@ export default function Page() {
                             </div>
                         }
                         <div className="my-5 flex gap-6">
-                            <div className="text-xl text-gray-500 "><span className="text-white">{ }</span> {userI?.followersCount} Seguindo</div>
-                            <div className="text-xl text-gray-500 "><span className="text-white">{ }</span>{userI?.followingCount} Seguidores</div>
+                            <div className="text-xl text-gray-500 "><span className="text-white">{ }</span> {userI?.followingCount} Seguindo</div>
+                            <div className="text-xl text-gray-500 "><span className="text-white">{ }</span>{userI?.followersCount} Seguidores</div>
                         </div>
                     </div>
                 </section>

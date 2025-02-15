@@ -1,13 +1,17 @@
 "use client"
-import {redirect} from 'next/navigation';
-import { useContext } from 'react';
-import { AuthContext } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function Page() {
-  const {userInfo} = useContext(AuthContext);
+   const router = useRouter();
 
-   if(userInfo.slug !== undefined){
-      redirect('/'+ userInfo.slug);
-   }
+   useEffect(() => {
+      const slug = sessionStorage.getItem('slug');
+      
+      if(slug !== undefined){
+         router.replace(`/${slug}`);
+      }
+      
+   }, []);
    return null;
 }
