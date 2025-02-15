@@ -7,11 +7,10 @@ export default function Page() {
 
    useEffect(() => {
       const slug = sessionStorage.getItem('slug');
-      
+
       if(slug !== undefined){
          router.replace(`/${slug}`);
       }
-      
    }, []);
    return null;
 }
