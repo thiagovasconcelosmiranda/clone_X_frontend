@@ -15,6 +15,7 @@ export const HomeFeed = () => {
 
     useEffect(() => {
         getFeed();
+        //console.log('test);
     }, [refresh]);
 
     setTimeout(()=>setRefresh(true), 50000);
