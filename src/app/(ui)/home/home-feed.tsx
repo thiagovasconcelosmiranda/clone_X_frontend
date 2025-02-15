@@ -5,16 +5,19 @@ import apiFeed from "@/data/api-feed";
 import verifyUrl from "@/utils/verify-url";
 import { AnswerPost } from "@/components/answer/answer-post";
 import Link from "next/link";
+import { faRefresh } from "@fortawesome/free-solid-svg-icons";
 
 export const HomeFeed = () => {
     const [listFeed, setListFeed] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [skeleton, setSkeleton] = useState(true);
+    const [refresh, setRefresh] = useState(false)
 
     useEffect(() => {
         getFeed();
+    }, [refresh]);
 
-    }, []);
+    setTimeout(()=>setRefresh(true), 50000);
 
     const getFeed = async () => {
         const token = sessionStorage.getItem('token');
@@ -23,7 +26,6 @@ export const HomeFeed = () => {
             if (res.tweets) {
                 setListFeed(res.tweets);
                 setIsLoading(true);
-                console.log(res.tweets)
 
                 for (let tweetIndex in res.tweets) {
                     res.tweets[tweetIndex].user.avatar = verifyUrl.avatar(res.tweets[tweetIndex].user.avatar);
