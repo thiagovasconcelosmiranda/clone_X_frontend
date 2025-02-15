@@ -41,75 +41,76 @@ export const TweetItem = ({ tweet, hideComments }: Props) => {
     }
 
     return (
-        <Link href={`/${tweet.id}/status`}>
-            <div className="flex gap-2 p-6 border-b-2 border-gray-900">
-                <div>
-                    <Link href={`/user/${tweet.user.slug}`}>
+
+        <div className="flex gap-2 p-6 border-b-2 border-gray-900">
+            <div>
+                <Link href={`/user/${tweet.user.slug}`}>
+                    <img
+                        crossOrigin='anonymous'
+                        src={tweet.user.avatar}
+                        alt={tweet.user.name}
+                        className="size-10 rounded-full"
+                    />
+                </Link>
+            </div>
+            <div className="flex-1">
+                <div className="flex flex-wrap items-center gap-x-3">
+                    <div className="">
+                        <Link href={`/${tweet.user.slug}`}>
+                            {tweet.user.name}
+                        </Link>
+                    </div>
+                    <div className="text-xs text-gray-500">@{tweet.user.slug} - {formatRelativeTime(new Date(tweet.createAt)
+                    )}</div>
+                </div>
+                <Link href={`/${tweet.id}/status`}>
+                    <div className="py-4 text-lg">{tweet.body}</div>
+                </Link>
+                {tweet.image &&
+                    <div className="w-full">
                         <img
                             crossOrigin='anonymous'
-                            src={tweet.user.avatar}
-                            alt={tweet.user.name}
-                            className="size-10 rounded-full"
+                            src={`${api}/posts/${tweet.user.slug}/${tweet.id}/${tweet.image}`}
+                            className="w-full rounded-2xl"
                         />
-                    </Link>
-                </div>
-                <div className="flex-1">
-                    <div className="flex flex-wrap items-center gap-x-3">
-                        <div className="">
-                            <Link href={`/${tweet.user.slug}`}>
-                                {tweet.user.name}
-                            </Link>
-                        </div>
-                        <div className="text-xs text-gray-500">@{tweet.user.slug} - {formatRelativeTime(new Date(tweet.createAt)
-                        )}</div>
                     </div>
-                    <div className="py-4 text-lg">{tweet.body}</div>
-                    {tweet.image &&
-                        <div className="w-full">
-                            <img
-                                crossOrigin='anonymous'
-                                src={`${api}/posts/${tweet.user.slug}/${tweet.id}/${tweet.image}`}
-                                className="w-full rounded-2xl"
-                            />
-                        </div>
-                    }
-                    <div className="flex mt-6 text-gray-500">
-                        {!hideComments &&
-                            <div className="flex-1">
-                                <div className="inline-flex items-center gap-2 cursor-pointer">
-                                    <FontAwesomeIcon
-                                        icon={faComment}
-                                        className="size-6"
-                                        onClick={() => setIsAnswer(true)}
-                                    />
-                                    <div className="text-lg">{tweet.answers.length}</div>
-                                </div>
-
-                            </div>
-                        }
+                }
+                <div className="flex mt-6 text-gray-500">
+                    {!hideComments &&
                         <div className="flex-1">
                             <div className="inline-flex items-center gap-2 cursor-pointer">
                                 <FontAwesomeIcon
-                                    icon={faRetweet}
+                                    icon={faComment}
                                     className="size-6"
+                                    onClick={() => setIsAnswer(true)}
                                 />
-                                <div className="text-lg"></div>
+                                <div className="text-lg">{tweet.answers.length}</div>
                             </div>
+
                         </div>
-                        <div className="flex-1">
-                            <div onClick={handleLikeButton} className={`inline-flex items-center gap-2 cursor-pointer ${like && 'text-red-400'}`}>
-                                <FontAwesomeIcon
-                                    icon={like ? faHeartFilled : faHeart} />
-                                <div className="text-lg">{tweet.likes.length}</div>
-                            </div>
+                    }
+                    <div className="flex-1">
+                        <div className="inline-flex items-center gap-2 cursor-pointer">
+                            <FontAwesomeIcon
+                                icon={faRetweet}
+                                className="size-6"
+                            />
+                            <div className="text-lg"></div>
+                        </div>
+                    </div>
+                    <div className="flex-1">
+                        <div onClick={handleLikeButton} className={`inline-flex items-center gap-2 cursor-pointer ${like && 'text-red-400'}`}>
+                            <FontAwesomeIcon
+                                icon={like ? faHeartFilled : faHeart} />
+                            <div className="text-lg">{tweet.likes.length}</div>
                         </div>
                     </div>
                 </div>
-                <AnswerPost
-                    tweet={tweet}
-                    active={isAnswer} onClick={() => setIsAnswer(false)} />
             </div>
-        </Link>
+            <AnswerPost
+                tweet={tweet}
+                active={isAnswer} onClick={() => setIsAnswer(false)} />
+        </div>
     )
 }
 
