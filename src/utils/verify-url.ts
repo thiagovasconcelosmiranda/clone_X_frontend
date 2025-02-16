@@ -11,9 +11,9 @@ export default {
         }
         return urlAvatar;
     },
+
     cover: (cover: string) => {
         let urlCover: string;
-
         const url = cover.split('/');
 
         if(url[6] !== 'null'){

@@ -11,14 +11,10 @@ export const HomeFeed = () => {
     const [listFeed, setListFeed] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [skeleton, setSkeleton] = useState(true);
-    const [refresh, setRefresh] = useState(false)
 
-    useEffect(() => {
-        getFeed();
-        //console.log('test);
-    }, [refresh]);
-
-    setTimeout(()=>setRefresh(true), 50000);
+   useEffect(()=>{
+     getFeed();
+   },[]);
 
     const getFeed = async () => {
         const token = sessionStorage.getItem('token');
