@@ -12,6 +12,7 @@ type Props = {
 
 export const GeneralHeader = ({children, backHref}: Props) => {
     const router = useRouter();
+    
     useEffect(()=>{
         const token = sessionStorage.getItem('token');
         if(!token){

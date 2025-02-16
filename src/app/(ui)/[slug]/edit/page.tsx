@@ -13,14 +13,20 @@ import apicover from '@/data/api-user';
 import apiUser from "@/data/api-user";
 import { User } from "@/types/user";
 import verifyUrl from "@/utils/verify-url";
+import { AlertForm } from "@/components/ui/alert-form";
+import { ErrorInput } from "@/components/ui/error-input";
 
 export default function Page() {
     const { userInfo } = useContext(AuthContext);
     const [nameField, setNameField] = useState('');
+    const [errorName, setErrorName] = useState('');
     const [linkField, setLinkField] = useState('');
+    const [errorLink, setErrorLink] = useState('');
     const [bioField, setBioField] = useState('');
+    const [errorBio, setErrorBio] = useState('');
     const [user, setUser] = useState<User>();
     const [token, setToken] = useState('');
+    const [activeMsg, setActiveMsg] = useState(false);
 
     useEffect(() => {
         getUser();
@@ -50,19 +56,33 @@ export default function Page() {
     }
 
     const handleClickEdit = async () => {
-            const token = sessionStorage.getItem('token');
-            if(token){
-                const res = await apiUpdate.userUpdate(
-                    token,
-                    nameField,
-                    linkField,
-                    bioField
-                );
-               
-                if (res.user) alert(res.user);
-                if (res.error) alert(res.error);
-            }
+        const token = sessionStorage.getItem('token');
+        if (token) {
+            const res = await apiUpdate.userUpdate(
+                token,
+                nameField,
+                linkField,
+                bioField
+            );
+
            
+            if(res.user) {
+                setActiveMsg(true);
+                setTimeout(()=>{
+                    setActiveMsg(false);
+                },1000);
+                return
+            } 
+                
+            inputError(res);
+        
+        }
+    }
+
+    const inputError = (res: any) => {
+        setErrorName(res.error ? res.error.name : '');
+        setErrorBio(res.error ? res.error.bio : '');
+        setErrorLink(res.error ? res.error.link : '');
     }
 
     const handleUploadCover = async (file: any) => {
@@ -91,7 +111,9 @@ export default function Page() {
             <GeneralHeader backHref="/edit">
                 <div className=" font-bold text-lg">Editar perfil</div>
             </GeneralHeader>
-
+             {activeMsg && (
+                <AlertForm msg="Dados Alterado!"/>
+             )}
             <section className="border-b-2 border-gray-900">
                 <div className="flex justify-center items-center gap-4 bg-gray-500 h-28 overflow-hidden">
                     <div className=" bg-black/80 flex justify-center items-center size-12 rounded-full">
@@ -138,6 +160,9 @@ export default function Page() {
                         value={nameField}
                         onChange={(e) => setNameField(e)}
                     />
+                    {errorName && (
+                        <ErrorInput text={errorName} />
+                    )}
                 </label>
                 <label>
                     <p className="text-lg text-gray-500 mb-2">Bio</p>
@@ -147,6 +172,9 @@ export default function Page() {
                         value={bioField}
                         onChange={(e) => setBioField(e)}
                     />
+                    {errorBio && (
+                        <ErrorInput text={errorBio} />
+                    )}
                 </label>
                 <label>
                     <p className="text-lg text-gray-500 mb-2">Link</p>
@@ -155,6 +183,9 @@ export default function Page() {
                         value={linkField}
                         onChange={(e) => setLinkField(e)}
                     />
+                    {errorLink && (
+                        <ErrorInput text={errorLink} />
+                    )}
                 </label>
 
                 <Button onClick={handleClickEdit} label="Salvar alterações" size={1} />
