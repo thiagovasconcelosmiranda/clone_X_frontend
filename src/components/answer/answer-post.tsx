@@ -62,7 +62,7 @@ export const AnswerPost = ({ tweet, active, onClick }: props) => {
     }
 
     return (
-        <div className={`w-80 md:w-96 h-auto p-4 bg-gray-700 fixed z-50 top-52 left-0 right-0 m-auto rounded-3xl ${active ? '' : 'hidden'}`}>
+        <div className={`w-80 md:w-96 h-auto p-4 bg-gray-700 fixed z-50 top-52 left-0 right-0 md:right-24 m-auto rounded-3xl ${active ? '' : 'hidden'}`}>
             {activeAlert && (
                 <AlertForm msg="Post enviado!" />
             )}
