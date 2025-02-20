@@ -59,6 +59,7 @@ export default function Page() {
                 isMeData(user.res.user.slug);
                 myTweet(user.res.token, res.user.slug);
                 userFollow(user.res.token, user.res.user.slug, res.user.slug);
+                return;
             }
         }
 

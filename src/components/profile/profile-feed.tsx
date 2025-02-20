@@ -14,11 +14,13 @@ export const ProfileFeed = ({ slug }: Props) => {
     },[]);
 
     const getMyTweets = async () => {
+        /*
         const token = localStorage.getItem('token');
         if(token){
             const res = await apiMyTweets.myTweets(token, slug);
             setTweets(res.tweets);
         }
+        */
     }
 
     return (
