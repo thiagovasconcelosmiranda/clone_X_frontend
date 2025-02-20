@@ -27,11 +27,14 @@ export default function Page({ searchParams }: Props) {
 
       const user = accessUser.user();
 
-      if (user.res.token) {
+      if (user.res.token && searchParams.q != '') {
          const res = await apiSearch.search(user.res.token, searchParams.q);
-         if (res.tweets.length === 0) return;
+         if (res.tweets.length > 1) {
+            setTweets(res.tweets);
+            setSkeleton(false);
+            return;
+         }
          setSkeleton(false);
-         setTweets(res.tweets);
       }
    }
 
