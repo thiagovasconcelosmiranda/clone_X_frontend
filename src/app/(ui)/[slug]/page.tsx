@@ -6,7 +6,7 @@ import { faLink } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import userApi from '@/data/api-user';
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, use } from "react";
 import { User } from '@/types/user';
 import { AuthContext } from "@/contexts/AuthContext";
 import { useParams } from "next/navigation";
@@ -14,6 +14,7 @@ import apiUser from "@/data/api-user";
 import verifyUrl from "@/utils/verify-url";
 import apiTweet from "@/data/api-tweet";
 import { TweetItem } from "@/components/tweet/tweet-item";
+import accessUser from "@/components/access/access-user";
 
 type UserI = {
     followersCount?: number,
@@ -29,8 +30,8 @@ export default function Page() {
     const [userI, setUserI] = useState<UserI>();
     const [following, setFollowing] = useState(false);
     const params = useParams();
-    const token = sessionStorage.getItem('token');
     const host: any = params.slug;
+    const [token, setToken] = useState('');
     const [avatar, setAvatar] = useState('');
     const [cover, setCover] = useState('');
     const [tweet, setTweet] = useState([]);
@@ -40,22 +41,24 @@ export default function Page() {
     }, []);
 
 
-    async function isMeData() {
-        let slug = sessionStorage.getItem('slug');
+    async function isMeData(slug: string) {
         host === slug ? setIsMe(true) : setIsMe(false);
     }
 
     async function getUser() {
-        if (token) {
-            const res = await userApi.getUserSlug(token, host);
+        const user = accessUser.user();
+        setToken(user.res.token);
+
+        if (user.res.token) {
+            const res = await userApi.getUserSlug(user.res.token, host);
             if (!res.error) {
-                setUserI(res);
                 setAvatar(verifyUrl.avatar(res.user.avatar));
                 setCover(verifyUrl.cover(res.user.cover));
                 setIsLoading(true);
-                isMeData();
-                myTweet(res.user.slug);
-                userFollow(res.user.slug);
+                setUserI(res);
+                isMeData(user.res.user.slug);
+                myTweet(user.res.token, res.user.slug);
+                userFollow(user.res.token, user.res.user.slug, res.user.slug);
             }
         }
 
@@ -64,16 +67,15 @@ export default function Page() {
         }
     }
 
-    const userFollow = async (slug2: string) => {
-        const slug = sessionStorage.getItem('slug');
+    const userFollow = async (token: string, slug: string, slug2: string) => {
         const res = await apiUser.getUserSlug(token, slug);
-
         for (let followIndex in res.follows) {
             if (res.follows[followIndex] == slug2) setFollowing(true);
         }
     }
 
-    const myTweet = async (slug: string) => {
+    const myTweet = async (token: string, slug: string) => {
+
         const res = await apiTweet.tweetslug(token, slug);
 
         if (res.tweets.length > 0) {

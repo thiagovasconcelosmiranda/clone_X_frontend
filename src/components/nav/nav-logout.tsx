@@ -7,12 +7,15 @@ import { AuthContext } from "@/contexts/AuthContext";
 
 export const NavLogout = () => {
     const router = useRouter();
-    const {setUserInfo} = useContext(AuthContext);
+    const { setUserInfo } = useContext(AuthContext);
 
     const handleClick = () => {
-         setUserInfo({});
-         window.sessionStorage.clear();
-        router.replace('/signin');
+        if (confirm('deseja sair?')) {
+            setUserInfo({});
+            sessionStorage.setItem('user', '');
+            router.replace('/signin');
+        }
+
     }
 
     return (

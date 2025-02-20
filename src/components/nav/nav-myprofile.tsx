@@ -4,12 +4,11 @@ import { useEffect, useState, useContext } from 'react';
 import { useRouter } from 'next/navigation';
 import apiUser from '@/data/api-user';
 import { User } from '@/types/user';
-import { AuthContext } from '@/contexts/AuthContext';
 import verifyUrl from '@/utils/verify-url';
+import accessUser from "../access/access-user";
 
 export const NavMyProfile = () => {
     const [userX, setUserX] = useState<User>();
-    const { setUserInfo } = useContext(AuthContext);
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [avatar, setAvatar] = useState("");
@@ -17,36 +16,28 @@ export const NavMyProfile = () => {
 
     useEffect(() => {
         count++;
-        if(count == 1){
+        if (count == 1) {
             getUser();
         }
     }, []);
 
 
-   
+
     const getUser = async () => {
-        const token = sessionStorage.getItem('token');
-        const slug = sessionStorage.getItem('slug');
-       
-        if (slug && token) {
-            const res = await apiUser.getUserSlug(token, slug);
-         
-            if (res.user.slug) {
-                setIsLoading(true);
-                setAvatar(verifyUrl.avatar(res.user.avatar));
-                setUserX(res.user);
-                getTweet(token, slug);
+        const user = accessUser.user();
+        const res = await apiUser.getUserSlug(user.res.token, user.res.user.slug);
 
-                setUserInfo(res);
-            }
-
-        } else {
+        if (!res.user.slug) {
             router.replace('/signin');
-        } 
-    }
-    const getTweet = async (token: string, slug: string) => {
+            return;
+        }
+
+        setIsLoading(true);
+        setAvatar(verifyUrl.avatar(res.user.avatar));
+        setUserX(res.user);
        
     }
+
 
     if (isLoading) {
         return (
@@ -54,7 +45,7 @@ export const NavMyProfile = () => {
                 <div className='size-10 mr-2 rounded-full overflow-hidden'>
                     <Link href={`/${userX?.slug}`}>
 
-                    <img
+                        <img
                             crossOrigin='anonymous'
                             src={avatar}
                             alt={userX?.name}

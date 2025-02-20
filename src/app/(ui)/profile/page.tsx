@@ -1,4 +1,5 @@
 "use client"
+import accessUser from '@/components/access/access-user';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
@@ -6,10 +7,10 @@ export default function Page() {
    const router = useRouter();
 
    useEffect(() => {
-      const slug = sessionStorage.getItem('slug');
+      const user = accessUser.user();
 
-      if(slug !== undefined){
-         router.replace(`/${slug}`);
+      if(user.res.user.slug){
+         router.replace(`/${user.res.user.slug}`);
       }
    }, []);
    return null;

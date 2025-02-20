@@ -84,7 +84,10 @@ export const TweetItem = ({ tweet, hideComments }: Props) => {
                                     className="size-6"
                                     onClick={() => setIsAnswer(true)}
                                 />
-                                <div className="text-lg">{tweet.answers.length}</div>
+                                {tweet.answers && (
+                                  <div className="text-lg">{tweet.answers.length}</div>
+
+                                )}
                             </div>
 
                         </div>

@@ -1,4 +1,5 @@
 "use client"
+import accessUser from "@/components/access/access-user";
 import { AnswerItem } from "@/components/answer/answer-item";
 import { AnswerSkeleton } from "@/components/answer/answer-skeleton";
 import { AlertForm } from "@/components/ui/alert-form";
@@ -23,7 +24,7 @@ export default function Page() {
     const [skeleton, setSkeleton] = useState(false);
     const [bodyValue, setBodyValue] = useState('');
     const id: any = params.slug;
-    const token = sessionStorage.getItem('token');
+     const [token, setToken] = useState('');
     const [alertPost, setAlertPost] = useState(false);
 
     useEffect(() => {
@@ -32,9 +33,11 @@ export default function Page() {
 
     const findTweetId = async () => {
         setSkeleton(true);
-        
-        if (token && id) {
-            const res = await apiTweet.tweetId(token, parseInt(id));
+        const user = accessUser.user();
+
+        if (user.res.token && id) {
+            setToken(user.res.token);
+            const res = await apiTweet.tweetId(user.res.token, parseInt(id));
             if (res.id) {
                 setTweet(res);
                 setAvatar(verifyUrl.avatar(res.user.avatar));

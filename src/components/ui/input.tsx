@@ -17,11 +17,11 @@ export const Input = ({ placeholder, password, filled, icon, value, onChange, on
     const [showPassword, setShowPassword] = useState(false);
 
     const handleKyUp = (event: KeyboardEvent<HTMLInputElement>) => {      
-         
+        if(!event.code) return;
+
         if(event.code.toLowerCase() === 'enter' && onEnter){
             onEnter();
         }
-    
     }
 
     return (
@@ -39,7 +39,8 @@ export const Input = ({ placeholder, password, filled, icon, value, onChange, on
                 placeholder={placeholder}
                 value={value}
                 onChange={e => onChange && onChange(e.target.value)}
-                //onKeyUp={handleKyUp}
+                onKeyUp={handleKyUp}
+               
            />
             {
                 password &&

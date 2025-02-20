@@ -3,23 +3,22 @@ import { TweetItem, TweetItemSkeleton } from "@/components/tweet/tweet-item"
 import { useEffect, useState } from 'react';
 import apiFeed from "@/data/api-feed";
 import verifyUrl from "@/utils/verify-url";
-import { AnswerPost } from "@/components/answer/answer-post";
-import Link from "next/link";
-import { faRefresh } from "@fortawesome/free-solid-svg-icons";
+import accessUser from "@/components/access/access-user";
 
 export const HomeFeed = () => {
     const [listFeed, setListFeed] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [skeleton, setSkeleton] = useState(true);
 
-   useEffect(()=>{
-     getFeed();
-   },[]);
+    useEffect(() => {
+        getFeed();
+    }, []);
 
     const getFeed = async () => {
-        const token = sessionStorage.getItem('token');
-        if (token) {
-            const res = await apiFeed.getfeed(token);
+        const user = accessUser.user();
+
+        if (user.res.token) {
+            const res = await apiFeed.getfeed(user.res.token);
             if (res.tweets) {
                 setListFeed(res.tweets);
                 setIsLoading(true);
