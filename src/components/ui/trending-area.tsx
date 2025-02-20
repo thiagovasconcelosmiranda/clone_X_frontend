@@ -36,9 +36,6 @@ export const TrendingArea = () => {
           </ div>
 
         ))}
-
-
-
       </div>
     </div>
   )

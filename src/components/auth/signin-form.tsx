@@ -18,7 +18,6 @@ export const SigninForm = () => {
     const [visibleAlert, setVisibleAlert] = useState(false);
     const [textAlert, setTextAlert] = useState('');
     const { setUserInfo } = useContext(AuthContext);
-    const [logged, setLogged] = useState('off');
 
 
     const handleEnterButton = async () => {
@@ -26,13 +25,12 @@ export const SigninForm = () => {
         const res = await authSign.signin(emailField, passwordField);
 
         if (res.token) {
+            sessionStorage.setItem('user', JSON.stringify(res));
             sessionStorage.setItem('token', res.token);
             sessionStorage.setItem('slug', res.user.slug);
             sessionStorage.setItem('avatar', res.user.avatar);
             setUserInfo(res);
-            setLogged('on');
-            checkUser();
-            //router.replace('/home');
+            router.replace('/home');
             return;
         }
 
@@ -51,16 +49,7 @@ export const SigninForm = () => {
         setErrorEmail(res.error ? res.error.email : '');
         setErrorPassword(res.error ? res.error.password : '');
     }
-    const checkUser = () => {
-      if(logged === 'on'){
-       setLogged('off');
-       console.log(logged)
-      }else{
-        setLogged('on');
-        console.log(logged)
-
-      }
-    }
+   
 
     return (
         <>
@@ -84,8 +73,7 @@ export const SigninForm = () => {
                 />
             )}
             <Checkbox
-                value={logged}
-                onChange={(e) => setLogged(e)}
+                
             />
             <Button label='Entrar'
                 onClick={handleEnterButton}

@@ -6,10 +6,10 @@ import apiUser from '@/data/api-user';
 import { User } from '@/types/user';
 import { AuthContext } from '@/contexts/AuthContext';
 import verifyUrl from '@/utils/verify-url';
+import accessUser from "@/utils/access-user";
 
 export const NavMyProfile = () => {
     const [userX, setUserX] = useState<User>();
-    const { setUserInfo } = useContext(AuthContext);
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [avatar, setAvatar] = useState("");
@@ -25,19 +25,16 @@ export const NavMyProfile = () => {
 
    
     const getUser = async () => {
-        const token = sessionStorage.getItem('token');
-        const slug = sessionStorage.getItem('slug');
-       
-        if (slug && token) {
-            const res = await apiUser.getUserSlug(token, slug);
+       const data = accessUser.user();
+        if (data.user.slug && data.token) {
+            const res = await apiUser.getUserSlug(data.token, data.user.slug);
          
             if (res.user.slug) {
                 setIsLoading(true);
                 setAvatar(verifyUrl.avatar(res.user.avatar));
                 setUserX(res.user);
-                getTweet(token, slug);
+                getTweet(data.token, data.user.slug);
 
-                setUserInfo(res);
             }
 
         } else {
