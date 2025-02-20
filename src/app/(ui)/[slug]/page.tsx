@@ -37,7 +37,7 @@ export default function Page() {
     const [tweet, setTweet] = useState([]);
 
     useEffect(() => {
-        getUser();
+        //getUser();
     }, []);
 
 
