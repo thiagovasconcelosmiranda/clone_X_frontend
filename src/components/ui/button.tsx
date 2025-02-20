@@ -9,7 +9,7 @@ type Props = {
 export const Button = ({ label, onClick, size, disabled }: Props) => {
   return (
     <button onClick={onClick}
-      className={`flex justify-center items-center cursor-pointer ${disabled ? 'bg-gray-300':'bg-white'}  text-black font-bold rounded-3xl
+      className={`flex justify-center items-center ${disabled ? 'bg-gray-300':'bg-white cursor-pointer'}  text-black font-bold rounded-3xl
         ${size === 1 && 'w-full h-14 text-lg'}
         ${size === 2 && 'w-full h-10 text-md'}
         ${size === 3 && 'w-full h-7 text-xs'}`}
