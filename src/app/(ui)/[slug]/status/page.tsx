@@ -7,6 +7,7 @@ import { GeneralHeader } from "@/components/ui/general-header";
 import { TextArea } from "@/components/ui/textarea";
 import apiTweet from "@/data/api-tweet";
 import { Tweet } from "@/types/tweet";
+import accessUser from "@/utils/access-user";
 import { formatRelativeTime } from "@/utils/format-relative";
 import verifyUrl from "@/utils/verify-url";
 import { faComment, faHeart, faRetweet } from "@fortawesome/free-solid-svg-icons";
@@ -23,7 +24,7 @@ export default function Page() {
     const [skeleton, setSkeleton] = useState(false);
     const [bodyValue, setBodyValue] = useState('');
     const id: any = params.slug;
-    const token = sessionStorage.getItem('token');
+    const [token, setToken] = useState('');
     const [alertPost, setAlertPost] = useState(false);
 
     useEffect(() => {
@@ -31,10 +32,12 @@ export default function Page() {
     }, []);
 
     const findTweetId = async () => {
+        const data = accessUser.user();
         setSkeleton(true);
-        
-        if (token && id) {
-            const res = await apiTweet.tweetId(token, parseInt(id));
+
+        if (data.token && id) {
+            setToken(data.token);
+            const res = await apiTweet.tweetId(data.token, parseInt(id));
             if (res.id) {
                 setTweet(res);
                 setAvatar(verifyUrl.avatar(res.user.avatar));
@@ -56,14 +59,14 @@ export default function Page() {
     }
 
     const handleButtonBody = async () => {
-        if(id && token){
-           const res = await apiTweet.addAnswer(token, bodyValue, id);
-           if(res.id){
-             setBodyValue("");
-             findTweetId();
-             setAlertPost(true);
-             setTimeout(()=>{setAlertPost(false)},10000);
-           }
+        if (id && token) {
+            const res = await apiTweet.addAnswer(token, bodyValue, id);
+            if (res.id) {
+                setBodyValue("");
+                findTweetId();
+                setAlertPost(true);
+                setTimeout(() => { setAlertPost(false) }, 10000);
+            }
         }
     }
 
@@ -73,9 +76,9 @@ export default function Page() {
                 <div className=" font-bold text-lg">{tweet?.user.slug}</div>
             </GeneralHeader>
             {alertPost && (
-                <AlertForm msg="Poste enviado"/>
+                <AlertForm msg="Poste enviado" />
             )}
-            
+
             <div className="">
                 <div className=" border-b-2 border-gray-400 p-6 flex items-center gap-4">
                     <div className="w-14 h-14 rounded-full flex justify-center items-center">
@@ -130,10 +133,10 @@ export default function Page() {
                         </div>
                         <div className="w-full">
                             <TextArea
-                             placeholder="Responder POST"
-                             value={bodyValue}
-                             onChange={(e)=>setBodyValue(e)}
-                              />
+                                placeholder="Responder POST"
+                                value={bodyValue}
+                                onChange={(e) => setBodyValue(e)}
+                            />
                         </div>
                         <div className="w-72">
                             <Button

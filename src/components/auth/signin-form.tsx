@@ -1,6 +1,6 @@
 "use client"
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import authSign from "@/data/api-signin";
@@ -16,11 +16,16 @@ export const SigninForm = () => {
     const [errorPassword, setErrorPassword] = useState('');
     const [visibleAlert, setVisibleAlert] = useState(false);
     const [textAlert, setTextAlert] = useState('');
-    const [isCheck, setIsCheck] = useState(true);
+    const [isCheck, setIsCheck] = useState(false);
+    const [buttonDisabled, setButtonDisabled] = useState(false);
 
+
+    useEffect(() => {
+        getCheck();
+    }, []);
 
     const handleEnterButton = async () => {
-
+        setButtonDisabled(true);
         const res = await authSign.signin(emailField, passwordField);
 
         if (res.token) {
@@ -28,6 +33,7 @@ export const SigninForm = () => {
             sessionStorage.setItem('token', res.token);
             sessionStorage.setItem('slug', res.user.slug);
             sessionStorage.setItem('avatar', res.user.avatar);
+            setCheck(emailField, passwordField);
             router.replace('/home');
             return;
 
@@ -36,6 +42,7 @@ export const SigninForm = () => {
         if (res.error === 'Acesso negado') {
             setVisibleAlert(true);
             setTextAlert(res.error);
+            setButtonDisabled(false);
         }
 
         setTimeout(() => {
@@ -48,7 +55,37 @@ export const SigninForm = () => {
         setErrorEmail(res.error ? res.error.email : '');
         setErrorPassword(res.error ? res.error.password : '');
     }
-   
+
+    const setCheck = (email: string, password: string) => {
+        if (isCheck == true) {
+            console.log(email)
+            sessionStorage.setItem('email', email);
+            sessionStorage.setItem('password', password);
+            return
+        }
+        sessionStorage.setItem('email', '');
+        sessionStorage.setItem('password', '');
+
+    }
+
+    const getCheck = () => {
+        const email = sessionStorage.getItem('email');
+        const password = sessionStorage.getItem('password');
+        if (email && password) {
+            setIsCheck(true);
+            setEmailField(email);
+            setPasswordField(password);
+        }
+    }
+
+    const handleButtonCheck = () => {
+        if (isCheck === true) {
+            setIsCheck(false);
+        } else {
+            setIsCheck(true);
+        }
+    }
+
 
     return (
         <>
@@ -72,11 +109,13 @@ export const SigninForm = () => {
                 />
             )}
             <Checkbox
+                onclick={handleButtonCheck}
                 checked={isCheck}
             />
             <Button label='Entrar'
                 onClick={handleEnterButton}
                 size={1}
+                disabled={buttonDisabled}
             />
             {visibleAlert && (
                 <AlertForm msg={textAlert} />

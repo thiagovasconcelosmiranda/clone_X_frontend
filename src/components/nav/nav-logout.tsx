@@ -10,12 +10,11 @@ export const NavLogout = () => {
     const { setUserInfo } = useContext(AuthContext);
 
     const handleClick = () => {
-        if (confirm('deseja sair?')) {
+        if (confirm('Deseja sair?')) {
             setUserInfo({});
-           // sessionStorage.setItem('user', '');
+            sessionStorage.setItem('user', '');
             router.replace('/signin');
         }
-
     }
 
     return (
