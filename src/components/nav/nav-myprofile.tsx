@@ -27,7 +27,7 @@ export const NavMyProfile = () => {
         const user = accessUser.user();
         const res = await apiUser.getUserSlug(user.res.token, user.res.user.slug);
 
-        if (!res.user.slug) {
+        if (!user.res.user.slug) {
             router.replace('/signin');
             return;
         }
@@ -35,7 +35,6 @@ export const NavMyProfile = () => {
         setIsLoading(true);
         setAvatar(verifyUrl.avatar(res.user.avatar));
         setUserX(res.user);
-       
     }
 
 
