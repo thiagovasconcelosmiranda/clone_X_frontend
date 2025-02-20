@@ -30,11 +30,12 @@ export default function Page() {
     const [userI, setUserI] = useState<UserI>();
     const [following, setFollowing] = useState(false);
     const params = useParams();
-    const host: any = params.slug;
     const [token, setToken] = useState('');
     const [avatar, setAvatar] = useState('');
     const [cover, setCover] = useState('');
     const [tweet, setTweet] = useState([]);
+    let host: any = params.slug;
+
 
     useEffect(() => {
         //getUser();
@@ -50,7 +51,9 @@ export default function Page() {
         setToken(user.res.token);
 
         if (user.res.token) {
-            const res = await userApi.getUserSlug(user.res.token, host);
+            console.log(host)
+            /*
+           // const res = await userApi.getUserSlug(user.res.token, host);
             if (!res.error) {
                 setAvatar(verifyUrl.avatar(res.user.avatar));
                 setCover(verifyUrl.cover(res.user.cover));
@@ -60,6 +63,7 @@ export default function Page() {
                 myTweet(user.res.token, res.user.slug);
                 userFollow(user.res.token, user.res.user.slug, res.user.slug);
             }
+             */
         }
 
         if (host === '/' + userInfo.slug) {
