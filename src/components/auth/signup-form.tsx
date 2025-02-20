@@ -17,22 +17,19 @@ export const SignupForm = () => {
     const [errorName, setErrorName] = useState('');
     const [errorEmail, setErrorEmail] = useState('');
     const [errorPassword, setErrorPassword] = useState('');
-    const[disabledButton, setDisabledButton] = useState(false);
+
 
     const handleEnterButton = async () => {
-        setDisabledButton(true);
         const res = await authSign.signup(nameField, emailField, passwordField);
 
         if (res.token) {
             router.replace('/signin');
-            return;
         }
 
         if (res.error === 'Acesso negado') {
             alert(res.error);
         }
         inputError(res);
-        setDisabledButton(false);
     }
 
     const inputError = (res: any) => {
@@ -71,7 +68,6 @@ export const SignupForm = () => {
             <Button label='Crie sua conta'
                 onClick={handleEnterButton}
                 size={1}
-                disabled={disabledButton}
             />
         </>
     )

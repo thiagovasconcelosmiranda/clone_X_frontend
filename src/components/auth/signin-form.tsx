@@ -1,6 +1,6 @@
 "use client"
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import authSign from "@/data/api-signin";
@@ -18,30 +18,27 @@ export const SigninForm = () => {
     const [visibleAlert, setVisibleAlert] = useState(false);
     const [textAlert, setTextAlert] = useState('');
     const { setUserInfo } = useContext(AuthContext);
-    const [checkbox, setCheckbox] = useState(false);
-    const[disabledButton, setDisabledButton] = useState(false);
+    const [logged, setLogged] = useState('off');
 
-
-    useEffect(() => {
-        getRegister();
-    }, []);
 
     const handleEnterButton = async () => {
-        setDisabledButton(true);
+
         const res = await authSign.signin(emailField, passwordField);
 
         if (res.token) {
-            sessionStorage.setItem('user', JSON.stringify({ res }));
+            sessionStorage.setItem('token', res.token);
+            sessionStorage.setItem('slug', res.user.slug);
+            sessionStorage.setItem('avatar', res.user.avatar);
             setUserInfo(res);
-            setRegister(emailField, passwordField);
-            router.replace('/home');
+            setLogged('on');
+            checkUser();
+            //router.replace('/home');
             return;
         }
 
         if (res.error === 'Acesso negado') {
             setVisibleAlert(true);
             setTextAlert(res.error);
-            setDisabledButton(false);
         }
 
         setTimeout(() => {
@@ -54,34 +51,15 @@ export const SigninForm = () => {
         setErrorEmail(res.error ? res.error.email : '');
         setErrorPassword(res.error ? res.error.password : '');
     }
+    const checkUser = () => {
+      if(logged === 'on'){
+       setLogged('off');
+       console.log(logged)
+      }else{
+        setLogged('on');
+        console.log(logged)
 
-    const handleButtonCheck = () => {
-        if (checkbox === true) {
-            setCheckbox(false);
-        } else {
-            setCheckbox(true);
-        }
-    }
-
-    const setRegister = (email: string, password: string) => {
-        if (checkbox) {
-            sessionStorage.setItem('email', email);
-            sessionStorage.setItem('password', password);
-        } else {
-            sessionStorage.setItem('email', '');
-            sessionStorage.setItem('password', '');
-        }
-    }
-
-    const getRegister = () => {
-        const email = sessionStorage.getItem('email');
-        const password = sessionStorage.getItem('password');
-
-        if (email && password) {
-            setEmailField(email);
-            setPasswordField(password);
-            setCheckbox(true);
-        }
+      }
     }
 
     return (
@@ -106,13 +84,12 @@ export const SigninForm = () => {
                 />
             )}
             <Checkbox
-                onclick={handleButtonCheck}
-                checked={checkbox}
+                value={logged}
+                onChange={(e) => setLogged(e)}
             />
             <Button label='Entrar'
                 onClick={handleEnterButton}
                 size={1}
-                disabled={disabledButton}
             />
             {visibleAlert && (
                 <AlertForm msg={textAlert} />

@@ -2,7 +2,6 @@
 import { RecommendationItem, RecommendationItemSkeleton } from "./recommendation-Item"
 import { useEffect, useState } from "react";
 import apiRecommendation from '@/data/api-recommendation';
-import accessUser from "../access/access-user";
 
 export const RecommendationArea = () => {
     const [suggestions, setSuggestions] = useState([]);
@@ -13,9 +12,9 @@ export const RecommendationArea = () => {
     }, []);
 
     const getSuggestions = async () => {
-        const user = accessUser.user();
-        if (user.res.token) {
-            const res = await apiRecommendation.suggestions(user.res.token);
+        const token = window.sessionStorage.getItem('token');
+        if (token) {
+            const res = await apiRecommendation.suggestions(token);
             if (res.users.length > 0) {
                 setSuggestions(res.users);
                 setTimeout(() => {
