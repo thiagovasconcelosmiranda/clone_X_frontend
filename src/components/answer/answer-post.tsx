@@ -62,14 +62,14 @@ export const AnswerPost = ({ tweet, active, onClick }: props) => {
     }
 
     return (
-        <div className={`w-96 h-auto p-4 bg-gray-700 fixed z-50 top-52 left-0 right-0 m-auto rounded-3xl ${active ? '' : 'hidden'}`}>
+        <div className={`w-80 md:w-96 h-auto p-4 bg-gray-700 fixed z-50 top-52 left-0 right-0 m-auto rounded-3xl ${active ? '' : 'hidden'}`}>
             {activeAlert && (
                 <AlertForm msg="Post enviado!" />
             )}
 
             <div className=" flex justify-between">
                 <FontAwesomeIcon icon={faXmark} className="size-6 cursor-pointer" onClick={onClick} />
-                <p>Rascunho</p>
+                <p className="cursor-pointer">Rascunho</p>
             </div>
             <div className="pt-4 flex gap-3">
                 <div className="w-12 h-12 rounded-full flex justify-start items-start">

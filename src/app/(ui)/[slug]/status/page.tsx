@@ -147,7 +147,6 @@ export default function Page() {
                     </div>
                 </div>
                 <div className="p-4 border-b-2 border-gray-400">
-
                     {answer.map((item, k) => (
                         <div key={k} className="gap-12 mt-14 p-4">
                             {skeleton ? (
