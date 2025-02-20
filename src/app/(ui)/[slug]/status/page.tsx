@@ -71,14 +71,13 @@ export default function Page() {
     }
 
     return (
-        <div>
+        <div className="w-full p-4">
             <GeneralHeader backHref="/home">
                 <div className=" font-bold text-lg">{tweet?.user.slug}</div>
             </GeneralHeader>
             {alertPost && (
                 <AlertForm msg="Poste enviado" />
             )}
-
             <div className="">
                 <div className=" border-b-2 border-gray-400 p-6 flex items-center gap-4">
                     <div className="w-14 h-14 rounded-full flex justify-center items-center">
@@ -123,8 +122,8 @@ export default function Page() {
                     </div>
                 </div>
                 <div className="p-4 border-b-2 border-gray-400">
-                    <div className=" w-full flex items-center gap-4">
-                        <div className="w-20 h-20 rounded-full flex justify-center items-center">
+                    <div className="flex-col w-full flex items-center gap-4 sm:flex-row">
+                        <div className="w-12 h-12 rounded-full flex justify-center items-center">
                             <img
                                 src={avatarUser}
                                 crossOrigin='anonymous'
