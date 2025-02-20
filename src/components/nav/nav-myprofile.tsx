@@ -24,15 +24,13 @@ export const NavMyProfile = () => {
 
 
     const getUser = async () => {
-        const user = accessUser.user();
-        const res = await apiUser.getUserSlug(user.res.token, user.res.user.slug);
-         console.log(user)
-        /*
-        if (!user.res.user.slug) {
+        const data = accessUser.user();
+        const res = await apiUser.getUserSlug(data.res.token, data.res.user.slug);
+        
+        if (!data.res.user.slug) {
             router.replace('/signin');
             return;
         }
-        */
 
         setIsLoading(true);
         setAvatar(verifyUrl.avatar(res.user.avatar));

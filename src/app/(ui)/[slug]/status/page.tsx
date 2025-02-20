@@ -48,7 +48,7 @@ export default function Page() {
                 setTimeout(() => {
                     setSkeleton(false);
                 }, 8000);
-                return;
+                //return;
             }
         }
     }

@@ -30,12 +30,11 @@ export default function Page() {
     const [userI, setUserI] = useState<UserI>();
     const [following, setFollowing] = useState(false);
     const params = useParams();
+    const host: any = params.slug;
     const [token, setToken] = useState('');
     const [avatar, setAvatar] = useState('');
     const [cover, setCover] = useState('');
     const [tweet, setTweet] = useState([]);
-    let host: any = params.slug;
-
 
     useEffect(() => {
         //getUser();
@@ -48,22 +47,19 @@ export default function Page() {
 
     async function getUser() {
         const user = accessUser.user();
-        setToken(user.res.token);
 
         if (user.res.token) {
-            console.log(host)
-            /*
-           // const res = await userApi.getUserSlug(user.res.token, host);
+            setToken(user.res.token);
+            const res = await userApi.getUserSlug(user.res.token, host);
             if (!res.error) {
+                setUserI(res);
                 setAvatar(verifyUrl.avatar(res.user.avatar));
                 setCover(verifyUrl.cover(res.user.cover));
                 setIsLoading(true);
-                setUserI(res);
                 isMeData(user.res.user.slug);
-                myTweet(user.res.token, res.user.slug);
-                userFollow(user.res.token, user.res.user.slug, res.user.slug);
+                myTweet(user.res.token);
+                userFollow(user.res.user.slug, res.user.slug);
             }
-             */
         }
 
         if (host === '/' + userInfo.slug) {
@@ -71,15 +67,16 @@ export default function Page() {
         }
     }
 
-    const userFollow = async (token: string, slug: string, slug2: string) => {
+    const userFollow = async (slug: string, slug2: string) => {
+
         const res = await apiUser.getUserSlug(token, slug);
+
         for (let followIndex in res.follows) {
             if (res.follows[followIndex] == slug2) setFollowing(true);
         }
     }
 
-    const myTweet = async (token: string, slug: string) => {
-
+    const myTweet = async ( slug: string) => {
         const res = await apiTweet.tweetslug(token, slug);
 
         if (res.tweets.length > 0) {
