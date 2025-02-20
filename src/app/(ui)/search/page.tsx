@@ -5,6 +5,7 @@ import { SearchInput } from "@/components/ui/search-input";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import apiSearch from '@/data/api-search';
+import accessUser from "@/utils/access-user";
 
 type Props = {
  searchParams: {
@@ -21,9 +22,9 @@ const [tweets, setTweets] = useState([]);
    },[]);
 
    const search = async () =>{
-     const token = window.sessionStorage.getItem('token');
-     if(token){
-        const res = await apiSearch.search(token, searchParams.q);
+     const data =  accessUser.user();
+     if(data.token){
+        const res = await apiSearch.search(data.token, searchParams.q);
         setTweets(res.tweets);
      }
    }

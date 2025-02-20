@@ -15,6 +15,7 @@ import { User } from "@/types/user";
 import verifyUrl from "@/utils/verify-url";
 import { AlertForm } from "@/components/ui/alert-form";
 import { ErrorInput } from "@/components/ui/error-input";
+import accessUser from "@/utils/access-user";
 
 export default function Page() {
     const { userInfo } = useContext(AuthContext);
@@ -34,12 +35,13 @@ export default function Page() {
 
     const getUser = async () => {
         const token: any = sessionStorage.getItem('token');
-        const slug = sessionStorage.getItem('slug');
+        const data = accessUser.user();
 
-        if (!token && !slug) return;
-        setToken(token);
 
-        const res = await apiUser.getUserSlug(token, slug);
+        if (!data.token && !data.user.slug) return;
+        setToken(data.token);
+
+        const res = await apiUser.getUserSlug(data.token, data.user.slug);
 
         if (res.user.slug) {
             res.user.avatar = verifyUrl.avatar(res.user.avatar);

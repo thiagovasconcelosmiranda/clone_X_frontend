@@ -6,6 +6,7 @@ import verifyUrl from "@/utils/verify-url";
 import { AnswerPost } from "@/components/answer/answer-post";
 import Link from "next/link";
 import { faRefresh } from "@fortawesome/free-solid-svg-icons";
+import accessUser from "@/utils/access-user";
 
 export const HomeFeed = () => {
     const [listFeed, setListFeed] = useState([]);
@@ -17,9 +18,9 @@ export const HomeFeed = () => {
    },[]);
 
     const getFeed = async () => {
-        const token = sessionStorage.getItem('token');
-        if (token) {
-            const res = await apiFeed.getfeed(token);
+        const data = accessUser.user();
+        if (data.token) {
+            const res = await apiFeed.getfeed(data.token);
             if (res.tweets) {
                 setListFeed(res.tweets);
                 setIsLoading(true);

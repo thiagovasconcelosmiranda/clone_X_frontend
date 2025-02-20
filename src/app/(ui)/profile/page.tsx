@@ -7,10 +7,10 @@ export default function Page() {
    const router = useRouter();
 
    useEffect(() => {
-      const user = accessUser.user();
+      const data = accessUser.user();
 
-      if(user.res.user.slug){
-         router.replace(`/${user.res.user.slug}`);
+      if(data.user.slug){
+         router.replace(`/${data.user.slug}`);
       }
    }, []);
    return null;

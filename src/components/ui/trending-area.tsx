@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { TrendingItem, TrendingItemSkeleton } from "./trending-item"
 import apiTrending from '@/data/api-trending';
+import accessUser from "@/utils/access-user";
 
 export const TrendingArea = () => {
   const [listTrending, setListTrending] = useState([]);
@@ -12,9 +13,10 @@ export const TrendingArea = () => {
   }, []);
 
   const getFeed = async () => {
-    const token = window.sessionStorage.getItem('token');
-    const res = await apiTrending.getTrending(token);
+    const data = accessUser.user();
 
+    const res = await apiTrending.getTrending(data.token);
+    
     setTimeout(() => {
       setSkeleton(false);
     }, 1000);
