@@ -1,12 +1,11 @@
 "use client"
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import authSign from "@/data/api-signin";
 import { ErrorInput } from "../ui/error-input";
 import { AlertForm } from "../ui/alert-form";
-import { AuthContext } from "@/contexts/AuthContext";
 import { Checkbox } from "../ui/checkbox";
 
 export const SigninForm = () => {
@@ -17,7 +16,7 @@ export const SigninForm = () => {
     const [errorPassword, setErrorPassword] = useState('');
     const [visibleAlert, setVisibleAlert] = useState(false);
     const [textAlert, setTextAlert] = useState('');
-    const { setUserInfo } = useContext(AuthContext);
+    const [isCheck, setIsCheck] = useState(true);
 
 
     const handleEnterButton = async () => {
@@ -29,9 +28,9 @@ export const SigninForm = () => {
             sessionStorage.setItem('token', res.token);
             sessionStorage.setItem('slug', res.user.slug);
             sessionStorage.setItem('avatar', res.user.avatar);
-            setUserInfo(res);
             router.replace('/home');
             return;
+
         }
 
         if (res.error === 'Acesso negado') {
@@ -73,7 +72,7 @@ export const SigninForm = () => {
                 />
             )}
             <Checkbox
-                
+                checked={isCheck}
             />
             <Button label='Entrar'
                 onClick={handleEnterButton}
