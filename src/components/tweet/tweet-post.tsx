@@ -64,7 +64,7 @@ export const TweetPost = () => {
   }
   return (
     <>
-      <div className="flex gap-6 py-8 border-b-2 border-gray-900">
+      <div className="flex gap-6 py-8 border-b-2 border-gray-900 p-5">
         <div className="">
 
           {user?.slug && (
@@ -76,7 +76,7 @@ export const TweetPost = () => {
             />
           )}
         </div>
-        <div className="flex-1">
+        <div className="flex-1 justify-center">
           <div className="min-h-14 outline-none text-lg text-white empty:before:text-gray-500 empty:before:content-[attr(data-placeholder)]"
             contentEditable
             role='textbox'
