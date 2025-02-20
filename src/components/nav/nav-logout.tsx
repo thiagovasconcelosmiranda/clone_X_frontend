@@ -13,7 +13,7 @@ export const NavLogout = () => {
         if (confirm('deseja sair?')) {
             setUserInfo({});
             sessionStorage.setItem('user', '');
-            router.replace('/signin');
+            //router.replace('/signin');
         }
 
     }
